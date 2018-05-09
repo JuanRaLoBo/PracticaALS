@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% if add == 1 %}
+		<title>Añadir</title>
+		{% elif list == 1 %}
+				<title>Listar</title>
+		{% endif %}
+		
+		<!-- Versión compilada y comprimida del CSS de Bootstrap -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+
+		<!-- Tema opcional -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+		<!-- Versión compilada y comprimida del JavaScript de Bootstrap -->
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+		
+		
+		<script>
+			function hideError()
+			{
+				var dvAnswer = document.getElementById( "dvError" );
+				dvAnswer.innerHTML = "";
+				dvAnswer.style.display = "none";
+			}
+
+			function showError(msg)
+			{
+				var dvAnswer = document.getElementById( "dvError" );
+				dvAnswer.innerHTML = "ERROR: " + msg;
+				dvAnswer.style.display = "block";
+			}
+
+			function validate()
+			{
+				var toret = false;
+				var frmInput = document.getElementById( "frmInput" );
+				// Prepare answer, in case it is needed.
+				hideError();
+				// Prepare values
+				var nombre = frmInput[ "nombre" ].value.trim();
+				var fecha = frmInput["fecha"].value.trim();
+				var genero = frmInput["genero"].value.trim();
+				if ( nombre.length === 0 ) {
+				showError( "Debe introducir un nombre." );
+				} else {
+				toret = true;
+				}
+				return toret;
+			}
+		</script>
+	</head>
+	<body class="container">
+		{% if add == 1 %}
+				<p>
+		<form 	class="form-group"
+				id="frmInput"
+				action="/add "
+				method="post">
+		<legend>Añadir</legend>
+		<label for="nombre" class="label-control col-lg-6">Título:</label> 
+		<input 				class="form-control col-lg-6"
+							type="text"
+							name="nombre"
+							id="nombre"
+							size="15"
+							placeholder="Título de la película"
+							style="border:none;background-color:lightgray"/>
+		<label for="fecha" class="label-control col-lg-6">Fecha:</label>
+		<input 				class="form-control col-lg-6"
+							type="text"
+							name="fecha"
+							id="fecha"
+							size="15"
+							placeholder="Fecha de salida"
+							style="border:none;background-color:lightgray"/>
+		<label for="genero" class="label-control col-lg-6">Género:</label>
+		<input 				class="form-control col-lg-6"
+							type="text"
+							name="genero"
+							id="genero"
+							size="15"
+							placeholder="Género de la película"
+							style="border:none;background-color:lightgray"/>
+		<input class="btn btn-primary" type="submit" value="Enviar" style="margin-top:10px">
+		<input class="btn btn-primary" type="button" onClick="javascript:history.go(-1);" value="<<" style="margin-top:10px">
+		</form>
+		</p>
+		{% endif %}
+		{% if list == 1 %}
+			{% if movies.count() > 0 %}
+			<div class="text-left">
+			<h2>Listado de películas</h2>
+			<ul style="list-style:none">
+				{% for movie in movies %}
+				<li > 
+					<form 	class="form-group row"
+							id="frmInput"
+							action="/list"
+							method="post"">
+							<label class="label-control col-lg-6">{{movie.nombre}}: {{movie.fecha}}: {{movie.genero}}</label>
+							<input type="hidden" value="{{ movie.nombre }}" name="movie_to_delete"></input>
+							<input class="col-lg-6" type="submit" value="X">
+					</form>
+				</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+			<form id="frmResult"">
+			<a class="btn btn-primary" href="/"> Volver </a>
+			</form>
+			</div>
+		{% endif %}
+	</body>
+</html>
